@@ -84,7 +84,7 @@ router.post('/register', uploads.single('profileimg'), function(req, res, next) 
       console.log(user);
     });
 
-    req.flash('success', 'You are now registered and can log in');
+    //req.flash('success', 'You are now registered and can log in');
 
     res.location('/');
     res.redirect('/');
