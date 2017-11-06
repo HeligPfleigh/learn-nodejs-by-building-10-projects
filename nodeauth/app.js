@@ -8,7 +8,6 @@ var session = require('express-session');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 
-var multer = require('multer');
 var flash = require('connect-flash');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
@@ -25,6 +24,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 //Handle file uploads
+
 //app.use(multer({dest:'./uploads/'}));
 
 // uncomment after placing your favicon in /public
