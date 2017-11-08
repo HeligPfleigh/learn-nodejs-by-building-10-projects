@@ -5,8 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var passport = require('passport');
-var localStrategy = require('passport-local').Strategy;
 
 var flash = require('connect-flash');
 var mongo = require('mongodb');
@@ -41,6 +39,7 @@ app.use(session({
 }));
 
 //Passport
+var passport = users.passport;
 app.use(passport.initialize());
 app.use(passport.session());
 

@@ -3,36 +3,47 @@ var router = express.Router();
 
 //Upload files
 var multer = require('multer');
-var uploads = multer({dest: './uploads'});
+var uploads = multer({ dest: './uploads' });
+
+//Passport module
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
+//Flash module
+var flash = require('connect-flash');
+router.use(flash());
+router.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
 
 var User = require('../models/user');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/register', function(req, res, next) {
+router.get('/register', function (req, res, next) {
   res.render('register', {
-    'title' : 'Register'
+    'title': 'Register'
   });
 });
 
-router.get('/login', function(req, res, next) {
+router.get('/login', function (req, res, next) {
   res.render('login', {
-    'title' : 'Login'
+    'title': 'Login'
   });
 });
 
-router.post('/register', uploads.single('profileimg'), function(req, res, next) {
+router.post('/register', uploads.single('profileimg'), function (req, res, next) {
   var name = req.body.name;
   var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
   var password2 = req.body.password2;
 
-  if(req.file)
-  {
+  if (req.file) {
     console.log('Uploading File...');
 
     //file info
@@ -43,7 +54,7 @@ router.post('/register', uploads.single('profileimg'), function(req, res, next) 
     var profileImageExt = req.file.extension;
     var profileImageSize = req.file.size;
   }
-  else{
+  else {
     // Set a default image
     var profileImageName = 'noimage.png';
   }
@@ -58,8 +69,7 @@ router.post('/register', uploads.single('profileimg'), function(req, res, next) 
 
   //Check for errors
   var errors = req.validationErrors();
-  if(errors)
-  {
+  if (errors) {
     res.render('register', {
       errors: errors,
       name: name,
@@ -69,8 +79,8 @@ router.post('/register', uploads.single('profileimg'), function(req, res, next) 
       password2: password2
     });
   }
-  else{
-    var newUser =  new User({
+  else {
+    var newUser = new User({
       name: name,
       email: email,
       username: username,
@@ -79,8 +89,8 @@ router.post('/register', uploads.single('profileimg'), function(req, res, next) 
     });
 
     //Create user
-    User.createUser(newUser, function(err, user){
-      if(err) throw err;
+    User.createUser(newUser, function (err, user) {
+      if (err) throw err;
       console.log(user);
     });
 
@@ -91,6 +101,49 @@ router.post('/register', uploads.single('profileimg'), function(req, res, next) 
   }
 });
 
+passport.use(new LocalStrategy(
+  function (username, password, done) {
+    User.getUserByUsername(username, function (err, user) {
+      console.log('A new local strategy is created');
+      if (err) throw err;
+      if (!user) {
+        console.log('Unknown User');
+        return done(null, false, { message: 'Unknown User' });
+      }
 
+      User.comparePassword(password, user.password, function (err, isMatch) {
+        if (err) throw err;
+        if (isMatch) {
+          return done(null, user);
+        } else {
+          console.log('Invalid Password');
+          return done(null, false, { message: 'Invalid Password' });
+        }
+      });
+    });
+  }
+));
+
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.getUserById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
+router.post('/login', uploads.single(''), passport.authenticate('local', {
+  failureRedirect: '/users/login',
+  failureFlash: 'Invalid username or password'
+}), function (req, res, next) {
+  console.log('Authentication Successful');
+  req.flash('success', 'You are logged in');
+  res.redirect('/');
+});
 
 module.exports = router;
+
+module.exports.passport = passport;
