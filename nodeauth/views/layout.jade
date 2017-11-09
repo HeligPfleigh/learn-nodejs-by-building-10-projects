@@ -27,7 +27,10 @@ html
                         li
                             a(href='/users/logout') Log Out
     .container
-      block content
+        if message && message.length
+            strong #{message}
+        block content
+
 
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
   script(src='javascripts/bootstrap.js')

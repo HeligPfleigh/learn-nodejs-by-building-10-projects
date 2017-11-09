@@ -6,14 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 
+var passport = require('passport');
 var flash = require('connect-flash');
-var mongo = require('mongodb');
-var mongoose = require('mongoose');
-var db = mongoose.connection;
 var expressValidator = require('express-validator');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+require('./config/passport')(passport); // pass passport for configuration
 
 var app = express();
 
@@ -32,16 +29,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //Handle Express Session
 app.set('trust proxy', 1);
 app.use(session({
-  secret: 'secret',
-  resave: 'true',
-  saveUninitialized: 'true',
-  cookie: {secure: true}
+  secret: 'yoyoyoyoyo', // session secret
+  resave: true,
+  saveUninitialized: true
 }));
 
 //Passport
-var passport = users.passport;
 app.use(passport.initialize());
 app.use(passport.session());
+
+var index = require('./routes/index')(passport);
+var users = require('./routes/users')(passport, flash);
 
 //Validator
 app.use(expressValidator({
