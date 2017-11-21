@@ -1,9 +1,22 @@
+var webpack = require('webpack');
 module.exports = {
-  entry: './app/app.js',
+  entry: [
+    'script!jquery/dist/jquery.min.js',
+    'script!foundation-sites/dist/js/foundation.min.js',
+    './app/app.js'
+  ],
   output: {
     path: __dirname,
     filename: './public/bundle.js'
   },
+  externals: {
+    jquery: 'jQuery'
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      '$': 'jquery'
+    })
+  ],
   resolve: {
     root: __dirname,
     alias: {
@@ -13,7 +26,8 @@ module.exports = {
       Nav: 'app/components/Nav.js',
       Transaction: 'app/components/Transaction.js',
       SignIn: 'app/components/SignIn.js',
-      AccountInfo: 'app/components/AccountInfo.js'
+      AccountInfo: 'app/components/AccountInfo.js',
+      Notification: 'app/components/Notification.js'
     }
   },
   module: {
