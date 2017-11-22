@@ -10,36 +10,15 @@ import Nav from 'Nav';
 import Account from 'Account';
 import Transaction from 'Transaction';
 import Main from 'Main';
+import SignUp from 'SignUp';
 
 require('style!css!foundation-sites/dist/css/foundation.min.css');
 require('style!css!./css/style.css');
 $(document).ready(() => $(document).foundation());
 
-var username = (state = null, action) => {
-  switch (action.type) {
-    case 'LOG_IN':
-      return action.username;
-    case 'LOG_OUT':
-      return null;
-    default:
-      return state;
-  }
-
-}
-
-var notification = (state = null, action) => {
-  switch (action.type) {
-    case 'SHOW_NOTIFICATION':
-      return action.txt;
-    case 'HIDE_NOTIFICATION':
-      return null;
-    default:
-      return state;
-  }
-}
-
-var reducer = redux.combineReducers({ username, notification });
-var store = redux.createStore(reducer);
+var reducer = require('reducer');
+var store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension?window.devToolsExtension():f=>f));
 
 var requireLogin = (nextState, replace, next) => {
   if (store.getState().username == null) {
@@ -55,6 +34,7 @@ ReactDOM.render(
         <IndexRoute component={HomePage} />
         <Route path="account" component={Account} />
         <Route path="transaction" component={Transaction} onEnter={requireLogin} />
+        <Route path="signup" component={SignUp}/>
       </Router>
     </Router>
   </Provider>,

@@ -14,7 +14,7 @@ class Notification extends React.Component{
       var {dispatch} = this.props;
       setTimeout(()=>{
           dispatch({type: 'HIDE_NOTIFICATION'});
-      }, 3000);
+      }, 2000);
   }
 }
 

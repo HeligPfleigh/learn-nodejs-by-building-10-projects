@@ -138,9 +138,13 @@
 
 	var _Transaction2 = _interopRequireDefault(_Transaction);
 
-	var _Main = __webpack_require__(318);
+	var _Main = __webpack_require__(319);
 
 	var _Main2 = _interopRequireDefault(_Main);
+
+	var _SignUp = __webpack_require__(323);
+
+	var _SignUp2 = _interopRequireDefault(_SignUp);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -149,42 +153,16 @@
 	var _require = __webpack_require__(278),
 	    Provider = _require.Provider;
 
-	__webpack_require__(322);
-	__webpack_require__(327);
+	__webpack_require__(324);
+	__webpack_require__(329);
 	$(document).ready(function () {
 	  return $(document).foundation();
 	});
 
-	var username = function username() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'LOG_IN':
-	      return action.username;
-	    case 'LOG_OUT':
-	      return null;
-	    default:
-	      return state;
-	  }
-	};
-
-	var notification = function notification() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case 'SHOW_NOTIFICATION':
-	      return action.txt;
-	    case 'HIDE_NOTIFICATION':
-	      return null;
-	    default:
-	      return state;
-	  }
-	};
-
-	var reducer = redux.combineReducers({ username: username, notification: notification });
-	var store = redux.createStore(reducer);
+	var reducer = __webpack_require__(331);
+	var store = redux.createStore(reducer, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	  return f;
+	}));
 
 	var requireLogin = function requireLogin(nextState, replace, next) {
 	  if (store.getState().username == null) {
@@ -204,7 +182,8 @@
 	      { path: '/', component: _Main2.default },
 	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _HomePage2.default }),
 	      _react2.default.createElement(_reactRouter.Route, { path: 'account', component: _Account2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: 'transaction', component: _Transaction2.default, onEnter: requireLogin })
+	      _react2.default.createElement(_reactRouter.Route, { path: 'transaction', component: _Transaction2.default, onEnter: requireLogin }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'signup', component: _SignUp2.default })
 	    )
 	  )
 	), document.getElementById('root'));
@@ -27227,27 +27206,10 @@
 	        null,
 	        _react2.default.createElement(
 	          'h1',
-	          null,
-	          'This is Homepage'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.handleRequest.bind(this) },
-	          'request'
+	          { className: 'text-center page-title' },
+	          'Homepage'
 	        )
 	      );
-	    }
-	  }, {
-	    key: 'handleRequest',
-	    value: function handleRequest() {
-	      // axios.get('/try')
-	      // .then(res => console.log(res.data))
-	      // .catch(err => console.log(err))
-	      _axios2.default.post('/axios', { username: 'anc', age: 10 }).then(function (res) {
-	        return console.log(res.data);
-	      }).catch(function (err) {
-	        return console.log(err);
-	      });
 	    }
 	  }]);
 
@@ -28850,51 +28812,6 @@
 	            { className: 'dropdown menu', 'data-dropdown-menu': true },
 	            _react2.default.createElement(
 	              'li',
-	              { className: 'menu-text' },
-	              'Site Title'
-	            ),
-	            _react2.default.createElement(
-	              'li',
-	              null,
-	              _react2.default.createElement(
-	                'a',
-	                { href: '#' },
-	                'One'
-	              ),
-	              _react2.default.createElement(
-	                'ul',
-	                { className: 'menu vertical' },
-	                _react2.default.createElement(
-	                  'li',
-	                  null,
-	                  _react2.default.createElement(
-	                    'a',
-	                    { href: '#' },
-	                    'One'
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  'li',
-	                  null,
-	                  _react2.default.createElement(
-	                    'a',
-	                    { href: '#' },
-	                    'Two'
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  'li',
-	                  null,
-	                  _react2.default.createElement(
-	                    'a',
-	                    { href: '#' },
-	                    'Three'
-	                  )
-	                )
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'li',
 	              null,
 	              _react2.default.createElement(
 	                _reactRouter.IndexLink,
@@ -28937,9 +28854,9 @@
 	              'li',
 	              null,
 	              _react2.default.createElement(
-	                'button',
-	                { type: 'button', className: 'button' },
-	                'Search'
+	                _reactRouter.Link,
+	                { to: '/signup', activeClassName: 'active' },
+	                'Sign Up'
 	              )
 	            )
 	          )
@@ -31390,8 +31307,8 @@
 	                null,
 	                _react2.default.createElement(
 	                    'h1',
-	                    null,
-	                    'This is Account Info'
+	                    { className: 'text-center page-title' },
+	                    'Account Info'
 	                ),
 	                _react2.default.createElement(
 	                    'p',
@@ -31434,15 +31351,21 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(8);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(278);
+
+	var _axios = __webpack_require__(250);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	var _UserInfo = __webpack_require__(318);
+
+	var _UserInfo2 = _interopRequireDefault(_UserInfo);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31464,25 +31387,159 @@
 	  _createClass(Transaction, [{
 	    key: 'render',
 	    value: function render() {
+	      var listUser = this.props.listUser;
+
+	      var xhtml = listUser != null ? _react2.default.createElement(
+	        'div',
+	        null,
+	        listUser.map(function (e, i) {
+	          return _react2.default.createElement(
+	            _UserInfo2.default,
+	            { key: i, index: i, userinfo: e },
+	            e.username
+	          );
+	        })
+	      ) : function (f) {
+	        return f;
+	      };
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
 	          'h1',
-	          null,
-	          'This is Transaction'
-	        )
+	          { className: 'text-center page-title' },
+	          'Transaction'
+	        ),
+	        xhtml
 	      );
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var dispatch = this.props.dispatch;
+
+	      _axios2.default.get('/getListAccount').then(function (_ref) {
+	        var data = _ref.data;
+
+	        dispatch({
+	          type: 'INIT_LIST',
+	          mang: data
+	        });
+	      }).catch(function (err) {
+	        return console.log(err);
+	      });
 	    }
 	  }]);
 
 	  return Transaction;
 	}(_react2.default.Component);
 
-	exports.default = Transaction;
+	module.exports = (0, _reactRedux.connect)(function (state) {
+	  return { listUser: state.listUser };
+	})(Transaction);
 
 /***/ }),
 /* 318 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(8);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(278);
+
+	var _axios = __webpack_require__(250);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var UserInfo = function (_React$Component) {
+	    _inherits(UserInfo, _React$Component);
+
+	    function UserInfo() {
+	        _classCallCheck(this, UserInfo);
+
+	        return _possibleConstructorReturn(this, (UserInfo.__proto__ || Object.getPrototypeOf(UserInfo)).apply(this, arguments));
+	    }
+
+	    _createClass(UserInfo, [{
+	        key: 'render',
+	        value: function render() {
+	            var userinfo = this.props.userinfo;
+
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    userinfo.username
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    userinfo.password
+	                ),
+	                _react2.default.createElement(
+	                    'p',
+	                    null,
+	                    userinfo.email
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'button', onClick: this.removeUser.bind(this) },
+	                    'Delete'
+	                ),
+	                _react2.default.createElement(
+	                    'button',
+	                    { className: 'button', onClick: this.editUser.bind(this) },
+	                    'Edit'
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'removeUser',
+	        value: function removeUser() {
+	            var _props = this.props,
+	                userinfo = _props.userinfo,
+	                dispatch = _props.dispatch,
+	                index = _props.index;
+
+
+	            _axios2.default.post('/deleteUser', { username: userinfo.username, email: userinfo.email }).then(function (res) {
+	                dispatch({
+	                    type: 'REMOVE_USER',
+	                    index: index
+	                });
+	            }).catch(function (err) {
+	                return console.log(err);
+	            });
+	        }
+	    }, {
+	        key: 'editUser',
+	        value: function editUser() {
+	            console.log('Edit');
+	        }
+	    }]);
+
+	    return UserInfo;
+	}(_react2.default.Component);
+
+	module.exports = (0, _reactRedux.connect)()(UserInfo);
+
+/***/ }),
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31503,7 +31560,7 @@
 
 	var _reactRedux = __webpack_require__(278);
 
-	var _Notification = __webpack_require__(319);
+	var _Notification = __webpack_require__(320);
 
 	var _Notification2 = _interopRequireDefault(_Notification);
 
@@ -31564,7 +31621,7 @@
 	})(Main);
 
 /***/ }),
-/* 319 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31575,7 +31632,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _timers = __webpack_require__(320);
+	var _timers = __webpack_require__(321);
 
 	var _reactRedux = __webpack_require__(278);
 
@@ -31616,7 +31673,7 @@
 
 	      (0, _timers.setTimeout)(function () {
 	        dispatch({ type: 'HIDE_NOTIFICATION' });
-	      }, 3000);
+	      }, 2000);
 	    }
 	  }]);
 
@@ -31626,7 +31683,7 @@
 	module.exports = (0, _reactRedux.connect)()(Notification);
 
 /***/ }),
-/* 320 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var apply = Function.prototype.apply;
@@ -31679,13 +31736,13 @@
 	};
 
 	// setimmediate attaches itself to the global object
-	__webpack_require__(321);
+	__webpack_require__(322);
 	exports.setImmediate = setImmediate;
 	exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 321 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -31878,13 +31935,112 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(10)))
 
 /***/ }),
-/* 322 */
+/* 323 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(8);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _axios = __webpack_require__(250);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	var _reactRedux = __webpack_require__(278);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SignUp = function (_React$Component) {
+	    _inherits(SignUp, _React$Component);
+
+	    function SignUp() {
+	        _classCallCheck(this, SignUp);
+
+	        return _possibleConstructorReturn(this, (SignUp.__proto__ || Object.getPrototypeOf(SignUp)).apply(this, arguments));
+	    }
+
+	    _createClass(SignUp, [{
+	        key: 'handleSignUp',
+	        value: function handleSignUp(e) {
+	            e.preventDefault();
+	            var dispatch = this.props.dispatch;
+	            var _refs = this.refs,
+	                username = _refs.username,
+	                email = _refs.email,
+	                password = _refs.password;
+	            // tttodo handle when signup successfull
+
+	            _axios2.default.post('/signUp', { username: username.value, email: email.value, password: password.value }).then(function (res) {
+	                if (res.data == 'TRUNG_USER') dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Username hoặc email đã được sử dụng!' });else {}
+	            }).catch(function (err) {
+	                return console.log(err);
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(
+	                    'h1',
+	                    { className: 'text-center page-title' },
+	                    ' Sign Up'
+	                ),
+	                _react2.default.createElement(
+	                    'form',
+	                    { onSubmit: this.handleSignUp.bind(this) },
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Username'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'text', placeholder: 'Username', ref: 'username' }),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Email'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'email', placeholder: 'Email', ref: 'email' }),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Password'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'password', placeholder: 'Password', ref: 'password' }),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { type: 'submit', className: 'button expanded' },
+	                        'Create An Account'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return SignUp;
+	}(_react2.default.Component);
+
+	module.exports = (0, _reactRedux.connect)()(SignUp);
+
+/***/ }),
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(323);
+	var content = __webpack_require__(325);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// Prepare cssTransformation
 	var transform;
@@ -31892,7 +32048,7 @@
 	var options = {"hmr":true}
 	options.transform = transform
 	// add the styles to the DOM
-	var update = __webpack_require__(325)(content, options);
+	var update = __webpack_require__(327)(content, options);
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -31909,10 +32065,10 @@
 	}
 
 /***/ }),
-/* 323 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(324)(undefined);
+	exports = module.exports = __webpack_require__(326)(undefined);
 	// imports
 
 
@@ -31923,7 +32079,7 @@
 
 
 /***/ }),
-/* 324 */
+/* 326 */
 /***/ (function(module, exports) {
 
 	/*
@@ -32005,7 +32161,7 @@
 
 
 /***/ }),
-/* 325 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*
@@ -32061,7 +32217,7 @@
 	var	singletonCounter = 0;
 	var	stylesInsertedAtTop = [];
 
-	var	fixUrls = __webpack_require__(326);
+	var	fixUrls = __webpack_require__(328);
 
 	module.exports = function(list, options) {
 		if (false) {
@@ -32377,7 +32533,7 @@
 
 
 /***/ }),
-/* 326 */
+/* 328 */
 /***/ (function(module, exports) {
 
 	
@@ -32472,13 +32628,13 @@
 
 
 /***/ }),
-/* 327 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(328);
+	var content = __webpack_require__(330);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// Prepare cssTransformation
 	var transform;
@@ -32486,7 +32642,7 @@
 	var options = {"hmr":true}
 	options.transform = transform
 	// add the styles to the DOM
-	var update = __webpack_require__(325)(content, options);
+	var update = __webpack_require__(327)(content, options);
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -32503,10 +32659,10 @@
 	}
 
 /***/ }),
-/* 328 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(324)(undefined);
+	exports = module.exports = __webpack_require__(326)(undefined);
 	// imports
 
 
@@ -32515,6 +32671,66 @@
 
 	// exports
 
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var redux = __webpack_require__(288);
+
+	var username = function username() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'LOG_IN':
+	      return action.username;
+	    case 'LOG_OUT':
+	      return null;
+	    default:
+	      return state;
+	  }
+	};
+
+	var notification = function notification() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'SHOW_NOTIFICATION':
+	      return action.txt;
+	    case 'HIDE_NOTIFICATION':
+	      return null;
+	    default:
+	      return state;
+	  }
+	};
+
+	var listUser = function listUser() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [{ username: null, password: null, email: null }];
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case 'INIT_LIST':
+	      return action.mang;
+	    case 'ADD_USER':
+	      return [].concat(_toConsumableArray(state), [action.item]);
+	    case 'REMOVE_USER':
+	      return state.filter(function (e, i) {
+	        return i != action.index;
+	      });
+	    default:
+	      return state;
+	  }
+	};
+
+	var reducer = redux.combineReducers({ username: username, notification: notification, listUser: listUser });
+
+	module.exports = reducer;
 
 /***/ })
 /******/ ]);

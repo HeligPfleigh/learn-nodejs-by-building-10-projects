@@ -7,7 +7,7 @@ class AccountInfo extends React.Component{
         var {username} = this.props;
         return (
             <div>
-                <h1>This is Account Info</h1>
+                <h1 className='text-center page-title'>Account Info</h1>
                 <p>Username: {this.props.username}</p>
                 <a href="#" onClick={this.logOut.bind(this)}>Log out</a>
             </div>

@@ -27,7 +27,10 @@ module.exports = {
       Transaction: 'app/components/Transaction.js',
       SignIn: 'app/components/SignIn.js',
       AccountInfo: 'app/components/AccountInfo.js',
-      Notification: 'app/components/Notification.js'
+      Notification: 'app/components/Notification.js',
+      SignUp: 'app/components/SignUp.js',
+      UserInfo: 'app/components/UserInfo.js',
+      reducer: 'app/reducers/reducer.js'
     }
   },
   module: {
