@@ -3,8 +3,27 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 
 class UserInfo extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            isEdit: false,
+        }
+    }
     render(){
-        var {userinfo} = this.props;
+        let {listUser, index} = this.props;
+        let userinfo = listUser[index];
+        if(this.state.isEdit){
+            return(
+                <form>
+                    <label>Username: {userinfo.username}</label>
+                    <label>Password: </label>
+                    <input type='password' ref='passwordChanged' defaultValue={userinfo.password}/>
+                    <label>Email: </label>
+                    <input type='email' ref='emailChanged' defaultValue={userinfo.email}/>
+                    <button className="button" onClick={this.saveUser.bind(this)}>Save</button>
+                </form>
+            );
+        }
         return(
             <div>
                 <p>{userinfo.username}</p>
@@ -16,8 +35,10 @@ class UserInfo extends React.Component{
         );
     }
 
-    removeUser(){
-        var {userinfo, dispatch, index} = this.props;
+    removeUser(e){
+        e.preventDefault();
+        var {listUser, dispatch, index} = this.props;
+        let userinfo = listUser[index];
 
         axios.post('/deleteUser', {username: userinfo.username, email: userinfo.email})
         .then(res=>{
@@ -29,9 +50,35 @@ class UserInfo extends React.Component{
         .catch(err=>console.log(err));
     }
 
-    editUser(){
-        console.log('Edit');
+    editUser(e){
+        e.preventDefault();
+        this.state.isEdit = !this.state.isEdit;
+        this.setState(this.state);
+    }
+
+    saveUser(e){
+        e.preventDefault();
+        var {listUser, dispatch, index} = this.props;
+        var {passwordChanged, emailChanged} = this.refs;
+        let userinfo = listUser[index];
+        axios.post('/editUser', {username: userinfo.username, email:emailChanged.value, password: passwordChanged.value})
+        .then(res=>{
+            if(res.data === 'SUA_THANH_CONG')
+            {
+               dispatch({
+                   type: 'EDIT_USER',
+                   username: userinfo.username,
+                   email:emailChanged.value, 
+                   password: passwordChanged.value
+               });
+            }            
+        })
+        .catch(err=>console.log(err));
+        this.state.isEdit = !this.state.isEdit;
+        this.setState(this.state);
     }
 }
 
-module.exports = connect()(UserInfo);
+module.exports = connect(function(state){
+    return {listUser: state.listUser};
+})(UserInfo);

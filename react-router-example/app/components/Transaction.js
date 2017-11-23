@@ -7,8 +7,9 @@ class Transaction extends React.Component{
 
   render(){
     var {listUser} = this.props;
-    var xhtml = listUser != null ? <div>{listUser.map((e, i)=>
-      <UserInfo key={i} index={i} userinfo={e}>{e.username}</UserInfo>)}</div>:f=>f;
+    var xhtml = listUser != null ? <div>{listUser.map(function(e, i){
+      return <UserInfo key={i} index={i}/>
+    })}</div>:f=>f;
     return (
       <div>
         <h1 className='text-center page-title'>Transaction</h1>

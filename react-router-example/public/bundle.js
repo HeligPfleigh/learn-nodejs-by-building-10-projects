@@ -31393,11 +31393,7 @@
 	        'div',
 	        null,
 	        listUser.map(function (e, i) {
-	          return _react2.default.createElement(
-	            _UserInfo2.default,
-	            { key: i, index: i, userinfo: e },
-	            e.username
-	          );
+	          return _react2.default.createElement(_UserInfo2.default, { key: i, index: i });
 	        })
 	      ) : function (f) {
 	        return f;
@@ -31467,17 +31463,54 @@
 	var UserInfo = function (_React$Component) {
 	    _inherits(UserInfo, _React$Component);
 
-	    function UserInfo() {
+	    function UserInfo(props) {
 	        _classCallCheck(this, UserInfo);
 
-	        return _possibleConstructorReturn(this, (UserInfo.__proto__ || Object.getPrototypeOf(UserInfo)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (UserInfo.__proto__ || Object.getPrototypeOf(UserInfo)).call(this, props));
+
+	        _this.state = {
+	            isEdit: false
+	        };
+	        return _this;
 	    }
 
 	    _createClass(UserInfo, [{
 	        key: 'render',
 	        value: function render() {
-	            var userinfo = this.props.userinfo;
+	            var _props = this.props,
+	                listUser = _props.listUser,
+	                index = _props.index;
 
+	            var userinfo = listUser[index];
+	            if (this.state.isEdit) {
+	                return _react2.default.createElement(
+	                    'form',
+	                    null,
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Username: ',
+	                        userinfo.username
+	                    ),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Password: '
+	                    ),
+	                    _react2.default.createElement('input', { type: 'password', ref: 'passwordChanged', defaultValue: userinfo.password }),
+	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Email: '
+	                    ),
+	                    _react2.default.createElement('input', { type: 'email', ref: 'emailChanged', defaultValue: userinfo.email }),
+	                    _react2.default.createElement(
+	                        'button',
+	                        { className: 'button', onClick: this.saveUser.bind(this) },
+	                        'Save'
+	                    )
+	                );
+	            }
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -31510,12 +31543,14 @@
 	        }
 	    }, {
 	        key: 'removeUser',
-	        value: function removeUser() {
-	            var _props = this.props,
-	                userinfo = _props.userinfo,
-	                dispatch = _props.dispatch,
-	                index = _props.index;
+	        value: function removeUser(e) {
+	            e.preventDefault();
+	            var _props2 = this.props,
+	                listUser = _props2.listUser,
+	                dispatch = _props2.dispatch,
+	                index = _props2.index;
 
+	            var userinfo = listUser[index];
 
 	            _axios2.default.post('/deleteUser', { username: userinfo.username, email: userinfo.email }).then(function (res) {
 	                dispatch({
@@ -31528,15 +31563,47 @@
 	        }
 	    }, {
 	        key: 'editUser',
-	        value: function editUser() {
-	            console.log('Edit');
+	        value: function editUser(e) {
+	            e.preventDefault();
+	            this.state.isEdit = !this.state.isEdit;
+	            this.setState(this.state);
+	        }
+	    }, {
+	        key: 'saveUser',
+	        value: function saveUser(e) {
+	            e.preventDefault();
+	            var _props3 = this.props,
+	                listUser = _props3.listUser,
+	                dispatch = _props3.dispatch,
+	                index = _props3.index;
+	            var _refs = this.refs,
+	                passwordChanged = _refs.passwordChanged,
+	                emailChanged = _refs.emailChanged;
+
+	            var userinfo = listUser[index];
+	            _axios2.default.post('/editUser', { username: userinfo.username, email: emailChanged.value, password: passwordChanged.value }).then(function (res) {
+	                if (res.data === 'SUA_THANH_CONG') {
+	                    dispatch({
+	                        type: 'EDIT_USER',
+	                        username: userinfo.username,
+	                        email: emailChanged.value,
+	                        password: passwordChanged.value
+	                    });
+	                }
+	            }).catch(function (err) {
+	                return console.log(err);
+	            });
+	            this.state.isEdit = !this.state.isEdit;
+	            this.setState(this.state);
 	        }
 	    }]);
 
 	    return UserInfo;
 	}(_react2.default.Component);
 
-	module.exports = (0, _reactRedux.connect)()(UserInfo);
+	module.exports = (0, _reactRedux.connect)(function (state) {
+	    return { listUser: state.listUser };
+	})(UserInfo);
 
 /***/ }),
 /* 319 */
@@ -31963,10 +32030,15 @@
 	var SignUp = function (_React$Component) {
 	    _inherits(SignUp, _React$Component);
 
-	    function SignUp() {
+	    function SignUp(props) {
 	        _classCallCheck(this, SignUp);
 
-	        return _possibleConstructorReturn(this, (SignUp.__proto__ || Object.getPrototypeOf(SignUp)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (SignUp.__proto__ || Object.getPrototypeOf(SignUp)).call(this, props));
+
+	        _this.state = {
+	            file: null
+	        };
+	        return _this;
 	    }
 
 	    _createClass(SignUp, [{
@@ -31978,10 +32050,22 @@
 	                username = _refs.username,
 	                email = _refs.email,
 	                password = _refs.password;
-	            // tttodo handle when signup successfull
 
-	            _axios2.default.post('/signUp', { username: username.value, email: email.value, password: password.value }).then(function (res) {
-	                if (res.data == 'TRUNG_USER') dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Username hoặc email đã được sử dụng!' });else {}
+
+	            var formData = new FormData();
+	            formData.append('username', username.value);
+	            formData.append('email', email.value);
+	            formData.append('password', password.value);
+	            formData.append('file', this.state.file);
+
+	            _axios2.default.post('/signUp', formData, {
+	                headers: {
+	                    'Content-Type': 'multipart/form-data'
+	                }
+	            }).then(function (res) {
+	                if (res.data == 'TRUNG_USER') dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Username hoặc email đã được sử dụng!' });else {
+	                    dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Đăng ký thành công!' });
+	                }
 	            }).catch(function (err) {
 	                return console.log(err);
 	            });
@@ -32019,12 +32103,23 @@
 	                    ),
 	                    _react2.default.createElement('input', { type: 'password', placeholder: 'Password', ref: 'password' }),
 	                    _react2.default.createElement(
+	                        'label',
+	                        null,
+	                        'Avatar'
+	                    ),
+	                    _react2.default.createElement('input', { type: 'file', ref: 'file', onChange: this.onChange.bind(this) }),
+	                    _react2.default.createElement(
 	                        'button',
 	                        { type: 'submit', className: 'button expanded' },
 	                        'Create An Account'
 	                    )
 	                )
 	            );
+	        }
+	    }, {
+	        key: 'onChange',
+	        value: function onChange(e) {
+	            this.setState({ file: e.target.files[0] });
 	        }
 	    }]);
 
@@ -32723,6 +32818,17 @@
 	      return state.filter(function (e, i) {
 	        return i != action.index;
 	      });
+	    case 'EDIT_USER':
+	      {
+	        var currentState = [].concat(_toConsumableArray(state));
+	        currentState.forEach(function (user) {
+	          if (user.username === action.username) {
+	            user.email = action.email;
+	            user.password = action.password;
+	          }
+	        });
+	        return currentState;
+	      }
 	    default:
 	      return state;
 	  }

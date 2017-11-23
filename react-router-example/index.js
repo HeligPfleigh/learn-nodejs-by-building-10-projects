@@ -1,8 +1,21 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
 
 var jsonParser = require('body-parser').json();
 var session = require('express-session');
+
+var multer = require('multer');
+const storage = multer.diskStorage({
+  destination: './files',
+  filename(req, file, cb){
+    let storeDir = './files/' + req.body.username;
+    if(!fs.existsSync(storeDir))
+      fs.mkdirSync(storeDir);
+    cb(null, `${req.body.username}//${file.originalname}`);
+  }
+});
+const upload = multer({ storage });
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -13,7 +26,7 @@ app.use(session({
   secret: 'asjd123jjlhiuoeu',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 1000 * 60 * 5 } //save cookie 5 minutes
+  cookie: { maxAge: 1000 * 60 * 60 } //save cookie 60 minutes
 }));
 
 app.listen(3000, () => console.log('Server started'));
@@ -53,8 +66,11 @@ app.get('/logout', (req, res) => {
 })
 
 // tttodo xử lý khi nhận post signUp
-app.post('/signUp', jsonParser, (req, res) => {
+app.post('/signUp', upload.single('file'), jsonParser, (req, res) => {
   var { username, email, password } = req.body;
+
+  const file = req.file;
+  console.log(file);
 
   //kiểm tra đã có email đăng ký chưa
   var checkError = db.filter(user => {
@@ -69,10 +85,12 @@ app.post('/signUp', jsonParser, (req, res) => {
   res.send('DANG_KY_THANH_CONG');
 });
 
+//lấy thông tin toàn bộ user
 app.get('/getListAccount', (req, res)=>{
   res.send(db);
 });
 
+//xóa user
 app.post('/deleteUser', jsonParser, (req, res)=>{
   var {username, email} = req.body;
   db = db.filter(user =>{
@@ -80,3 +98,27 @@ app.post('/deleteUser', jsonParser, (req, res)=>{
   });
   res.send('XOA_THANH_CONG');
 });
+
+//sửa user
+app.post('/editUser', jsonParser, (req, res)=>{
+  var {username, email, password} = req.body;
+  var hasUser = false;
+  db.forEach(function(user){
+    if(user.username === username)
+    {
+      user.email = email;
+      user.password = password;
+      hasUser = true;
+    }
+  });
+  if(hasUser) return res.send('SUA_THANH_CONG');
+  res.send('KHONG_TON_TAI_USER');
+});
+
+app.post('/uploadFile', upload.single('file'), (req, res)=>{
+  const file = req.file;
+  const username = req.body.username;
+  console.log(username);
+  //console.log(file);
+  //xử lý file upload
+})

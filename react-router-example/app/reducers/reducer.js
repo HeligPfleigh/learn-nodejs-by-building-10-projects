@@ -31,6 +31,18 @@ var username = (state = null, action) => {
         return [...state, action.item];
       case 'REMOVE_USER':
         return state.filter((e,i) => i != action.index)
+      case 'EDIT_USER':
+      {
+        var currentState = [...state];
+        currentState.forEach(function(user){
+          if(user.username === action.username)
+          {
+            user.email = action.email;
+            user.password = action.password;
+          }
+        });
+        return currentState;
+      }
       default:
         return state;
     }

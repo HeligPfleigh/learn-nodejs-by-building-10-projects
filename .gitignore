@@ -12,6 +12,7 @@ calculator
 
 # react-router-example 
 react-router-example/node_modules
+react-router-example/files
 
 #soundcloud-client
 soundcloud-client/node_modules
