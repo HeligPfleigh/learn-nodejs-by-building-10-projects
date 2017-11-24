@@ -38,19 +38,22 @@ class SignUp extends React.Component{
 
     render(){
         return (
-            <div>
+            <div >
                 <h1 className='text-center page-title'> Sign Up</h1>
-                <form onSubmit={this.handleSignUp.bind(this)}>
-                    <label>Username</label>
-                    <input type='text' placeholder='Username' ref='username' />
-                    <label>Email</label>
-                    <input type='email' placeholder='Email' ref='email' />
-                    <label>Password</label>
-                    <input type='password' placeholder='Password' ref='password' />
-                    <label>Avatar</label>
+                <form className="log-in-form" onSubmit={this.handleSignUp.bind(this)}>
+                    <label><b>Username</b></label>
+                    <input type='text' placeholder='Pick a username' ref='username' />
+                    <label><b>Email</b></label>
+                    <input type='email' placeholder='you@example.com' ref='email' />
+                    <label><b>Password</b></label>
+                    <input type='password' placeholder='Create a password' ref='password' />
+                    <label><b>Avatar</b></label>
                     <input type='file' ref='file' onChange={this.onChange.bind(this)}/>
                     <button type='submit' className='button expanded'>Create An Account</button>
                 </form>
+                <div className='text-center page-title'>
+                    Already has an account? <a href="/#/account">Click to Sign In</a>
+                </div>
             </div>
         );
     }

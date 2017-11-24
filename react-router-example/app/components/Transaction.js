@@ -11,8 +11,8 @@ class Transaction extends React.Component{
       return <UserInfo key={i} index={i}/>
     })}</div>:f=>f;
     return (
-      <div>
-        <h1 className='text-center page-title'>Transaction</h1>
+      <div className='text-center page-title'>
+        <h1>Transaction</h1>
         {xhtml}
       </div>
     );

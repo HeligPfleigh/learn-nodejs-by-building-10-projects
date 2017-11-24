@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 class Notification extends React.Component{
   render(){
     return (
-      <div>
-        <p>{this.props.txt}</p>
+      <div className='text-center page-title'>
+        <p className="noti">{this.props.txt}</p>
       </div>
     );
   }

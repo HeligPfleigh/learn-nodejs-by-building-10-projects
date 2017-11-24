@@ -31223,9 +31223,10 @@
 
 	      _axios2.default.post('/signIn', { username: username.value, password: password.value }).then(function (res) {
 	        if (res.data === 'DANG_NHAP_THANH_CONG') {
+	          dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Log in successful!' });
 	          dispatch({ type: 'LOG_IN', username: username.value });
 	        } else {
-	          dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Kiem tra lai username va password' });
+	          dispatch({ type: 'SHOW_NOTIFICATION', txt: 'Username or password is incorrect!' });
 	        }
 	      }).catch(function (err) {
 	        return console.log(err);
@@ -31244,14 +31245,43 @@
 	        ),
 	        _react2.default.createElement(
 	          'form',
-	          { onSubmit: this.handleSubmit.bind(this) },
+	          { className: 'log-in-form', onSubmit: this.handleSubmit.bind(this) },
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Username'
+	            )
+	          ),
 	          _react2.default.createElement('input', { type: 'text', placeholder: 'Username', ref: 'username' }),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            _react2.default.createElement(
+	              'b',
+	              null,
+	              'Password'
+	            )
+	          ),
 	          _react2.default.createElement('input', { type: 'password', placeholder: 'Password', ref: 'password' }),
 	          _react2.default.createElement(
 	            'button',
 	            { type: 'submit', className: 'button expanded' },
 	            'Sign In'
 	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'text-center page-title' },
+	          'Come in first time?',
+	          _react2.default.createElement(
+	            'a',
+	            { href: '/#/signup' },
+	            ' Create an account'
+	          ),
+	          '.'
 	        )
 	      );
 	    }
@@ -31304,10 +31334,10 @@
 
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'text-center page-title' },
 	                _react2.default.createElement(
 	                    'h1',
-	                    { className: 'text-center page-title' },
+	                    null,
 	                    'Account Info'
 	                ),
 	                _react2.default.createElement(
@@ -31400,10 +31430,10 @@
 	      };
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'text-center page-title' },
 	        _react2.default.createElement(
 	          'h1',
-	          { className: 'text-center page-title' },
+	          null,
 	          'Transaction'
 	        ),
 	        xhtml
@@ -31485,7 +31515,7 @@
 	            if (this.state.isEdit) {
 	                return _react2.default.createElement(
 	                    'form',
-	                    null,
+	                    { className: 'userinfo' },
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
@@ -31497,7 +31527,7 @@
 	                        null,
 	                        'Password: '
 	                    ),
-	                    _react2.default.createElement('input', { type: 'password', ref: 'passwordChanged', defaultValue: userinfo.password }),
+	                    _react2.default.createElement('input', { type: 'text', ref: 'passwordChanged', defaultValue: userinfo.password }),
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
@@ -31513,30 +31543,33 @@
 	            }
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'userinfo' },
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
+	                    'Username: ',
 	                    userinfo.username
 	                ),
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
+	                    'Password: ',
 	                    userinfo.password
 	                ),
 	                _react2.default.createElement(
 	                    'p',
 	                    null,
+	                    'Email: ',
 	                    userinfo.email
 	                ),
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'button', onClick: this.removeUser.bind(this) },
+	                    { className: 'button button-transaction', onClick: this.removeUser.bind(this) },
 	                    'Delete'
 	                ),
 	                _react2.default.createElement(
 	                    'button',
-	                    { className: 'button', onClick: this.editUser.bind(this) },
+	                    { className: 'button button-transaction', onClick: this.editUser.bind(this) },
 	                    'Edit'
 	                )
 	            );
@@ -31725,10 +31758,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'text-center page-title' },
 	        _react2.default.createElement(
 	          'p',
-	          null,
+	          { className: 'noti' },
 	          this.props.txt
 	        )
 	      );
@@ -32083,35 +32116,61 @@
 	                ),
 	                _react2.default.createElement(
 	                    'form',
-	                    { onSubmit: this.handleSignUp.bind(this) },
+	                    { className: 'log-in-form', onSubmit: this.handleSignUp.bind(this) },
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
-	                        'Username'
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            'Username'
+	                        )
 	                    ),
-	                    _react2.default.createElement('input', { type: 'text', placeholder: 'Username', ref: 'username' }),
+	                    _react2.default.createElement('input', { type: 'text', placeholder: 'Pick a username', ref: 'username' }),
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
-	                        'Email'
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            'Email'
+	                        )
 	                    ),
-	                    _react2.default.createElement('input', { type: 'email', placeholder: 'Email', ref: 'email' }),
+	                    _react2.default.createElement('input', { type: 'email', placeholder: 'you@example.com', ref: 'email' }),
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
-	                        'Password'
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            'Password'
+	                        )
 	                    ),
-	                    _react2.default.createElement('input', { type: 'password', placeholder: 'Password', ref: 'password' }),
+	                    _react2.default.createElement('input', { type: 'password', placeholder: 'Create a password', ref: 'password' }),
 	                    _react2.default.createElement(
 	                        'label',
 	                        null,
-	                        'Avatar'
+	                        _react2.default.createElement(
+	                            'b',
+	                            null,
+	                            'Avatar'
+	                        )
 	                    ),
 	                    _react2.default.createElement('input', { type: 'file', ref: 'file', onChange: this.onChange.bind(this) }),
 	                    _react2.default.createElement(
 	                        'button',
 	                        { type: 'submit', className: 'button expanded' },
 	                        'Create An Account'
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'text-center page-title' },
+	                    'Already has an account? ',
+	                    _react2.default.createElement(
+	                        'a',
+	                        { href: '/#/account' },
+	                        'Click to Sign In'
 	                    )
 	                )
 	            );
@@ -32762,7 +32821,7 @@
 
 
 	// module
-	exports.push([module.id, ".page-title{\r\n    margin-top: 2.5rem;\r\n    margin-bottom: 2.5rem;\r\n}", ""]);
+	exports.push([module.id, ".page-title{\r\n    margin-top: 2.5rem;\r\n    margin-bottom: 2.5rem;\r\n}\r\n\r\n.log-in-form{\r\n    border: 1px solid #cacaca;\r\n    margin-left: 200px;\r\n    margin-right: 200px;\r\n    padding: 1rem;\r\n    border-radius: 0;\r\n}\r\n\r\n.noti{\r\n    border: 1px solid #0d7a0d;\r\n    padding: 0.5rem;\r\n    text-align: center;\r\n    background: #98FB98;\r\n}\r\n\r\n.userinfo{\r\n    border: 1px solid #0000FF;\r\n    background: #FFFF99;\r\n    padding: 1rem;\r\n    margin: 3rem;\r\n}\r\n\r\n.button-transaction{\r\n    margin: 4px;\r\n}", ""]);
 
 	// exports
 

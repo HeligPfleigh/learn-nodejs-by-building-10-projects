@@ -14,10 +14,10 @@ class UserInfo extends React.Component{
         let userinfo = listUser[index];
         if(this.state.isEdit){
             return(
-                <form>
+                <form className="userinfo">
                     <label>Username: {userinfo.username}</label>
                     <label>Password: </label>
-                    <input type='password' ref='passwordChanged' defaultValue={userinfo.password}/>
+                    <input type='text' ref='passwordChanged' defaultValue={userinfo.password}/>
                     <label>Email: </label>
                     <input type='email' ref='emailChanged' defaultValue={userinfo.email}/>
                     <button className="button" onClick={this.saveUser.bind(this)}>Save</button>
@@ -25,12 +25,12 @@ class UserInfo extends React.Component{
             );
         }
         return(
-            <div>
-                <p>{userinfo.username}</p>
-                <p>{userinfo.password}</p>
-                <p>{userinfo.email}</p>
-                <button className="button" onClick={this.removeUser.bind(this)}>Delete</button>
-                <button className="button" onClick={this.editUser.bind(this)}>Edit</button>
+            <div className="userinfo">
+                <p>Username: {userinfo.username}</p>
+                <p>Password: {userinfo.password}</p>
+                <p>Email: {userinfo.email}</p>
+                <button className="button button-transaction" onClick={this.removeUser.bind(this)}>Delete</button>
+                <button className="button button-transaction" onClick={this.editUser.bind(this)}>Edit</button>
             </div>
         );
     }

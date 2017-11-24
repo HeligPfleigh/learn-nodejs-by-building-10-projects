@@ -73,11 +73,11 @@ app.post('/signUp', upload.single('file'), jsonParser, (req, res) => {
   console.log(file);
 
   //kiểm tra đã có email đăng ký chưa
-  var checkError = db.filter(user => {
-    return (user.email === email || user.username === username);
-  }).length;
+  var checkError = db.some(user => {
+    return (user.username !== null || user.email !== null || user.email === email || user.username === username);
+  });
 
-  if(checkError != 0){
+  if(checkError){
     return res.send('TRUNG_USER');
   }
 

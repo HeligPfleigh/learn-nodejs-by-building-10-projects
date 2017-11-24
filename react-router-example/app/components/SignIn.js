@@ -13,10 +13,11 @@ class SignIn extends React.Component{
     axios.post('/signIn', {username:username.value, password: password.value})
     .then(res=>{
       if(res.data === 'DANG_NHAP_THANH_CONG'){
+        dispatch({type: 'SHOW_NOTIFICATION', txt: 'Log in successful!'})
         dispatch({type: 'LOG_IN', username: username.value});
       }
       else{
-        dispatch({type: 'SHOW_NOTIFICATION', txt: 'Kiem tra lai username va password'});
+        dispatch({type: 'SHOW_NOTIFICATION', txt: 'Username or password is incorrect!'});
       }
     })
     .catch(err=>console.log(err));
@@ -27,11 +28,14 @@ class SignIn extends React.Component{
       
       <div>
         <h1 className='text-center page-title'> Sign In</h1>
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form className="log-in-form" onSubmit={this.handleSubmit.bind(this)}>
+          <label><b>Username</b></label>
           <input type='text' placeholder='Username' ref='username'/>
+          <label><b>Password</b></label>
           <input type='password' placeholder='Password' ref='password'/>
           <button type='submit' className='button expanded'>Sign In</button>
         </form>
+        <div className='text-center page-title'>Come in first time?<a href="/#/signup"> Create an account</a>.</div>
       </div>
     )
   }
