@@ -17,6 +17,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+var User = require('./models/user');
+
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
@@ -35,22 +37,18 @@ app.get('/', (req, res) => {
 })
 
 //Database và hàm kiểm tra đăng nhập
-var db = [{ username: 'admin', password: '1234', email: 'admin@gmail.com'},
-          { username: 'test', password: '1', email: 'a@a'}];
-function checkAuthentication(username, password){
-  return(db.filter(item=>{
-    return (item.username === username && item.password === password);
-  }).length != 0)
-}
+var db = [];
 
-app.post('/signIn', jsonParser, (req, res) => {
+app.post('/signIn', jsonParser, async function(req, res){
   var { username, password } = req.body;
-  if (checkAuthentication(username, password)) {
+  const result = User.checkAuthentication(username, password);
+  if(!result){
+    return res.send('DANG_NHAP_THAT_BAI');
+  }
+  else{
     req.session.username = username;
     return res.send('DANG_NHAP_THANH_CONG');
   }
-
-  return res.send('DANG_NHAP_THAT_BAI');
 })
 
 app.get('/getInfo', (req, res) => {
@@ -70,11 +68,10 @@ app.post('/signUp', upload.single('file'), jsonParser, (req, res) => {
   var { username, email, password } = req.body;
 
   const file = req.file;
-  console.log(file);
 
   //kiểm tra đã có email đăng ký chưa
   var checkError = db.some(user => {
-    return (user.username !== null || user.email !== null || user.email === email || user.username === username);
+    return (user.email === email || user.username === username);
   });
 
   if(checkError){
@@ -82,12 +79,28 @@ app.post('/signUp', upload.single('file'), jsonParser, (req, res) => {
   }
 
   db.push({ username, password, email });
+
+  let newUser = new User({
+    username: username,
+    email: email,
+    password: password
+  });
+
+  User.createUser(newUser, function(err, user){
+    if(err) throw err;
+  });
+
   res.send('DANG_KY_THANH_CONG');
 });
 
 //lấy thông tin toàn bộ user
 app.get('/getListAccount', (req, res)=>{
-  res.send(db);
+  User.getAllUser(function(err, data){
+    if(err) throw err;
+    db = [...data];
+    console.log(db);
+    res.send(data);
+  });
 });
 
 //xóa user
@@ -96,6 +109,11 @@ app.post('/deleteUser', jsonParser, (req, res)=>{
   db = db.filter(user =>{
     return (user.username != username || user.email != email);
   });
+
+  User.deleteUser(username, function(err, user){
+    if(err) throw err;
+  });
+
   res.send('XOA_THANH_CONG');
 });
 
@@ -108,17 +126,12 @@ app.post('/editUser', jsonParser, (req, res)=>{
     {
       user.email = email;
       user.password = password;
+      User.editUser(username, email, password, function(err, data){
+        if(err) throw err;
+      });
       hasUser = true;
     }
   });
   if(hasUser) return res.send('SUA_THANH_CONG');
   res.send('KHONG_TON_TAI_USER');
 });
-
-app.post('/uploadFile', upload.single('file'), (req, res)=>{
-  const file = req.file;
-  const username = req.body.username;
-  console.log(username);
-  //console.log(file);
-  //xử lý file upload
-})
