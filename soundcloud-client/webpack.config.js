@@ -20,6 +20,15 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
             inject: true
-        })
-    ]
+        }),
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin()
+    ],
+    module:{
+        loaders:[{
+            test: /\.js?$/,
+            exclude: /node_modules/,
+            loader: 'react-hot-loader!babel'
+        }]
+    }
 }
