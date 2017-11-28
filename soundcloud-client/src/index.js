@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
 import TrackList from './components/TrackList';
 
 import {configureStore} from './store';
@@ -17,9 +18,11 @@ const tracks = [
 ];
 
 const store = configureStore();
-store.dispatch(actions.setTrack(tracks));
+store.dispatch(actions.setTracks(tracks));
 
 ReactDOM.render(
-  <TrackList tracks={tracks} />,
+  <Provider store={store}>
+    <TrackList />
+  </Provider>,
   document.getElementById('app')
 );

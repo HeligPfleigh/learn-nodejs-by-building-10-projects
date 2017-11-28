@@ -1,9 +1,11 @@
-import redux from 'redux';
-import {createStore} from 'redux';
-
+import {createStore, applyMiddleware} from 'redux';
+import {createLogger} from 'redux-logger';
 import rootReducer from './reducers/index';
 
-export function configureStore() {
-  return redux.createStore(rootReducer, redux.compose(
-    window.devToolsExtension?window.devToolsExtension():f=>f));
+const logger = createLogger();
+
+const createStoreWithMiddleware = applyMiddleware(logger)(createStore);
+
+export function configureStore(initialState) {
+  return createStoreWithMiddleware(rootReducer, initialState);
 }
