@@ -67,7 +67,7 @@
 /* 0 */
 /***/ (function(module, exports) {
 
-console.log('SoundClound client');
+console.log('Soundcloud client!!!');
 
 /***/ })
 /******/ ]);

@@ -22,7 +22,7 @@ var store = redux.createStore(reducer, redux.compose(
 
 var requireLogin = (nextState, replace, next) => {
   if (store.getState().username == null) {
-    replace('/');
+    replace('/account');
   }
   next();
 }

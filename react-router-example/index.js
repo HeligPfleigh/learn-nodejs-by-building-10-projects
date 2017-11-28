@@ -41,7 +41,7 @@ var db = [];
 
 app.post('/signIn', jsonParser, async function(req, res){
   var { username, password } = req.body;
-  const result = User.checkAuthentication(username, password);
+  const result = await User.checkAuthentication(username, password);
   if(!result){
     return res.send('DANG_NHAP_THAT_BAI');
   }

@@ -42,6 +42,7 @@ module.exports.getAllUser = function(callback){
     })
 }
 
-module.exports.checkAuthentication = function(username, password, callback){
-     return User.findOne({username: username, password: password});
+module.exports.checkAuthentication = (username, password) => {
+    //trả về 1 promise
+    return User.findOne({username: username, password: password});
 }

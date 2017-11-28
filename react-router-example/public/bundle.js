@@ -166,7 +166,7 @@
 
 	var requireLogin = function requireLogin(nextState, replace, next) {
 	  if (store.getState().username == null) {
-	    replace('/');
+	    replace('/account');
 	  }
 	  next();
 	};
@@ -27168,7 +27168,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -27189,31 +27189,49 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	__webpack_require__(334);
+
 	var HomePage = function (_React$Component) {
-	  _inherits(HomePage, _React$Component);
+	    _inherits(HomePage, _React$Component);
 
-	  function HomePage() {
-	    _classCallCheck(this, HomePage);
+	    function HomePage() {
+	        _classCallCheck(this, HomePage);
 
-	    return _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).apply(this, arguments));
-	  }
-
-	  _createClass(HomePage, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'h1',
-	          { className: 'text-center page-title' },
-	          'Homepage'
-	        )
-	      );
+	        return _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).apply(this, arguments));
 	    }
-	  }]);
 
-	  return HomePage;
+	    _createClass(HomePage, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'mainWrapper' },
+	                _react2.default.createElement(
+	                    'h2',
+	                    null,
+	                    'ChatIO'
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'chatWrapper' },
+	                    _react2.default.createElement('div', { className: 'chatWindow' }),
+	                    _react2.default.createElement(
+	                        'form',
+	                        { classsName: 'messageForm' },
+	                        _react2.default.createElement('input', { size: '35', className: 'message', placeholder: 'Type Something...' }),
+	                        _react2.default.createElement('input', { type: 'submit', value: 'Say It!' })
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'userWrapper' },
+	                    _react2.default.createElement('div', { className: 'users' })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return HomePage;
 	}(_react2.default.Component);
 
 	exports.default = HomePage;
@@ -32153,7 +32171,7 @@
 	                        _react2.default.createElement(
 	                            'b',
 	                            null,
-	                            'Avatar'
+	                            'Reference'
 	                        )
 	                    ),
 	                    _react2.default.createElement('input', { type: 'file', ref: 'file', onChange: this.onChange.bind(this) }),
@@ -32166,7 +32184,7 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'text-center page-title' },
-	                    'Already has an account? ',
+	                    'Already have an account? ',
 	                    _react2.default.createElement(
 	                        'a',
 	                        { href: '/#/account' },
@@ -32896,6 +32914,53 @@
 	var reducer = redux.combineReducers({ username: username, notification: notification, listUser: listUser });
 
 	module.exports = reducer;
+
+/***/ }),
+/* 332 */,
+/* 333 */,
+/* 334 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(335);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// Prepare cssTransformation
+	var transform;
+
+	var options = {"hmr":true}
+	options.transform = transform
+	// add the styles to the DOM
+	var update = __webpack_require__(327)(content, options);
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../node_modules/css-loader/index.js!./HomePage.css", function() {
+				var newContent = require("!!../../node_modules/css-loader/index.js!./HomePage.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ }),
+/* 335 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(326)(undefined);
+	// imports
+
+
+	// module
+	exports.push([module.id, "/* Chat IO */\r\n.input{\r\n    height:30px;\r\n}\r\n\r\n.chatWindow{\r\n    height: 300px;\r\n}\r\n.mainWrapper{\r\n    width:700px;\r\n    margin: 0 auto;\r\n}\r\n.chatWrapper{\r\n    float:left;\r\n    border:1px #ccc solid;\r\n    border-radius: 10px;\r\n    background: #f4f4f4;\r\n    padding: 10px;\r\n}\r\n.userWrapper{\r\n    float: left;\r\n    border:1px #ccc solid;\r\n    border-radius: 10px;\r\n    background: #f4f4f4;\r\n    padding: 10px;\r\n    margin-left:20px;\r\n    width:150px;\r\n    max-height:200px;\r\n}", ""]);
+
+	// exports
+
 
 /***/ })
 /******/ ]);

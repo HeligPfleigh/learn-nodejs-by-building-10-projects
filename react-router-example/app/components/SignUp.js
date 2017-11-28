@@ -47,12 +47,12 @@ class SignUp extends React.Component{
                     <input type='email' placeholder='you@example.com' ref='email' />
                     <label><b>Password</b></label>
                     <input type='password' placeholder='Create a password' ref='password' />
-                    <label><b>Avatar</b></label>
+                    <label><b>Reference</b></label>
                     <input type='file' ref='file' onChange={this.onChange.bind(this)}/>
                     <button type='submit' className='button expanded'>Create An Account</button>
                 </form>
                 <div className='text-center page-title'>
-                    Already has an account? <a href="/#/account">Click to Sign In</a>
+                    Already have an account? <a href="/#/account">Click to Sign In</a>
                 </div>
             </div>
         );
